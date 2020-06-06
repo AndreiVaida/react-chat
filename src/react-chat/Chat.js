@@ -4,12 +4,7 @@ import ChatUser from "./ChatUser";
 import "./ChatStyle.css"
 
 class Chat extends React.Component {
-  constructor(props,
-              chatUser = new ChatUser(0, "Me"),
-              messagesSource,
-              inputMessageLabel = "",
-              inputPlaceholder = "Write a message...",
-              sendButtonText = "Send") {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -50,21 +45,24 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className={"chatContainer"}>
         {/* Message List */}
-        {MessageList(this.state.messages)}
+        {MessageList(this.state.messages, this.props.emptyListMessage, this.props.chatUserStyleClass, this.props.otherUserStyleClass)}
 
         {/* Input and Send a Message */}
-        <label>
-          {this.props.inputMessageLabel}
-          <input type="text" name="name"
-                 value={this.state.inputMessage}
-                 placeholder={this.props.inputPlaceholder}
-                 onChange={e => this.setState({inputMessage: e.target.value})}
-                 onKeyDown={this.handleKeyDown}
-          />
-        </label>
-        <input type="submit" value={this.props.sendButtonText} onClick={this.onSend}/>
+        <div className={"inputBarAndSendButtonContainer"}>
+          <label className={"inputBarContainer"}>
+            {this.props.inputMessageLabel}
+            <input type="text" name="name"
+                   value={this.state.inputMessage}
+                   placeholder={this.props.inputPlaceholder}
+                   onChange={e => this.setState({inputMessage: e.target.value})}
+                   onKeyDown={this.handleKeyDown}
+                   className={"inputBar"}
+            />
+          </label>
+          <input type="submit" value={this.props.sendButtonText} onClick={this.onSend} className={"sendButton"}/>
+        </div>
       </div>
     );
   }

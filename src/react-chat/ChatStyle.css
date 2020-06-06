@@ -1,3 +1,21 @@
 .userName {
     opacity: 50%;
 }
+
+.chatMessage-Left {
+    text-align: left;
+    margin-right: auto;
+}
+
+.chatMessage-Right {
+    text-align: right;
+    margin-left: auto;
+}
+
+.wideChat {
+    width: 1000px;
+}
+
+.fullWidth {
+    width: 100%;
+}

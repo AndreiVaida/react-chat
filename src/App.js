@@ -23,7 +23,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {/*<Chat inputMessageLabel={"Mesaj:"} inputPlaceholder={"Scrie ceva..."} sendButtonText={"Trimite"} messagesSource={messagesSource} />*/}
+        {/*<Chat inputMessageLabel={"Mesaj:"} inputPlaceholder={"Scrie ceva..."} sendButtonText={"Trimite"} messagesSource={messagesSource} otherUserStyleClass={"bg-danger chatMessage-Left"} />*/}
         <Chat chatUser={chatUser} messagesSource={messagesSource} />
       </header>
     </div>

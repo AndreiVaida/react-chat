@@ -16,8 +16,8 @@ import ListGroupItem from "react-bootstrap/ListGroupItem";
  */
 const MessageList = (messages,
                      emptyListMessage = "No messages",
-                     chatUserStyleClass = "bg-info",
-                     otherUserStyleClass = "bg-success") => {
+                     chatUserStyleClass = "bg-info chatMessage-Right",
+                     otherUserStyleClass = "bg-success chatMessage-Left") => {
   return (
     <ListGroup>
       {
