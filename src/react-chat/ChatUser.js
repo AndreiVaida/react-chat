@@ -1,7 +1,7 @@
 export default class ChatUser {
-  constructor(id, name, image) {
-    this.id = id;
+  constructor(name, image, isTheChatUser = false) {
     this.name = name;
     this.image = image;
+    this.isTheChatUser = isTheChatUser;
   }
 }

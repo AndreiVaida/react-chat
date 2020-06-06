@@ -1,63 +1,76 @@
-import React, { useReducer, useState } from "react";
+import React from "react";
 import MessageList from "./MessageList";
-import ChatMessage from "./ChatMessage";
 import ChatUser from "./ChatUser";
 import "./ChatStyle.css"
 
-const Chat = (chatUser = new ChatUser(0, "Me"),
-              sendButtonText = "Send") => {
+class Chat extends React.Component {
+  constructor(props,
+              chatUser = new ChatUser(0, "Me"),
+              messagesSource,
+              inputMessageLabel = "",
+              inputPlaceholder = "Write a message...",
+              sendButtonText = "Send") {
+    super(props);
 
-  const [messages, updateMessages] = useReducer(arrayReducer, []);
-  const [inputMessage, setInputMessage] = useState("");
-
-  const onSend = () => {
-    const chatMessage = {
-      message: inputMessage,
-      user: chatUser,
-      dateTime: Date.now(),
+    this.state = {
+      messages: [],
+      inputMessage: "",
     };
 
-    updateMessages({action: "add", chatMessage});
-    setInputMessage("");
+    props.messagesSource.subscribe({
+      next: chatMessage => this.addMessage(chatMessage),
+      error: err => alert(`Something wrong occurred: ${err}`),
+      complete: () => alert('Chat is done'),
+    });
   }
 
-  const handleKeyDown = (e) => {
+  onSend = () => {
+    if (this.state.inputMessage.trim().length === 0) {
+      return;
+    }
+
+    const chatMessage = {
+      message: this.state.inputMessage,
+      user: this.props.chatUser ?? new ChatUser("Me", null, true),
+      dateTime: Date.now(),
+    };
+    this.addMessage(chatMessage);
+    this.setState({inputMessage: ""});
+  }
+
+  addMessage = (chatMessage) => {
+    this.setState({messages: [...this.state.messages, chatMessage]});
+  }
+
+  handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      onSend();
+      this.onSend();
     }
   }
 
-  return (
-    <div>
-      {/* Message List */}
-      {
-        MessageList(messages)
-      }
+  render() {
+    return (
+      <div>
+        {/* Message List */}
+        {MessageList(this.state.messages)}
 
-      {/* Input and Send a Message */}
-      <label>
-        Message:
-        <input type="text" name="name"
-               value={inputMessage}
-               onChange={e => setInputMessage(e.target.value)}
-               onKeyDown={handleKeyDown}
-        />
-      </label>
-      <input type="submit" value={sendButtonText} onClick={onSend}/>
-    </div>
-  );
-}
-
-const arrayReducer = (array, {action, chatMessage}) => {
-  switch (action) {
-    case "add":
-      return [...array, chatMessage];
-    case "prepend":
-      return [chatMessage, ...array];
-    default:
-      console.error("Invalid action in arrayReducer");
-      return array;
+        {/* Input and Send a Message */}
+        <label>
+          {this.props.inputMessageLabel}
+          <input type="text" name="name"
+                 value={this.state.inputMessage}
+                 placeholder={this.props.inputPlaceholder}
+                 onChange={e => this.setState({inputMessage: e.target.value})}
+                 onKeyDown={this.handleKeyDown}
+          />
+        </label>
+        <input type="submit" value={this.props.sendButtonText} onClick={this.onSend}/>
+      </div>
+    );
   }
 }
+
+
+
 
 export default Chat;

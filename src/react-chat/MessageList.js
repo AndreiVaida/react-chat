@@ -11,15 +11,19 @@ import ListGroupItem from "react-bootstrap/ListGroupItem";
  *      dateTime: Date (optional)
  *    }
  * @param emptyListMessage: string (optional)
+ * @param chatUserStyleClass: string (optional)
+ * @param otherUserStyleClass: string (optional)
  */
-const MessageList = (messages, emptyListMessage = "No messages") => {
-
+const MessageList = (messages,
+                     emptyListMessage = "No messages",
+                     chatUserStyleClass = "bg-info",
+                     otherUserStyleClass = "bg-success") => {
   return (
     <ListGroup>
       {
         messages.length > 0 ?
           messages.map((chatMessage, index) =>
-            <ListGroupItem className={"bg-info"} key={index}>
+            <ListGroupItem className={chatMessage.user.isTheChatUser ? chatUserStyleClass : otherUserStyleClass } key={index}>
               {
                 ChatMessage(chatMessage.message, chatMessage.user, chatMessage.dateTime)
               }
