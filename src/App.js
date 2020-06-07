@@ -67,7 +67,18 @@ function App() {
       <header className="App-header">
         {/* Using the chat is very simple: just add a line */}
         {Chat(messagesSource, chatUser, scrollObserver)}
-        {/*<Chat inputMessageLabel={"Mesaj:"} inputPlaceholder={"Scrie ceva..."} sendButtonText={"Trimite"} messagesSource={messagesSource} otherUserStyleClass={"bg-danger chatMessage-Left"} />*/}
+        {/* Or you can customize like this: */}
+        {/*{Chat (messagesSource,*/}
+        {/*  chatUser,*/}
+        {/*  scrollObserver,*/}
+        {/*  "Nothing here :(",*/}
+        {/*  "This is your chat",*/}
+        {/*  "Write something nice :)",*/}
+        {/*  "bg-danger chatMessage-Left",*/}
+        {/*  "bg-warning chatMessage-Right",*/}
+        {/*  "Send me!",*/}
+        {/*  "btn-info")*/}
+        {/*}*/}
 
         {/* Demo message input */}
         <div style={{position: "absolute", bottom: "20px", left: "20px", fontSize: "15px"}}>

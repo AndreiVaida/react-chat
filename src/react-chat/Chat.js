@@ -10,8 +10,11 @@ const Chat = (messagesSource,
               chatUser,
               scrollObserver,
               emptyListMessage = undefined,
+              inputMessageLabel = undefined,
+              inputPlaceholder = undefined,
               chatUserStyleClass = undefined,
               otherUserStyleClass = undefined,
+              sendButtonText = undefined,
               sendButtonStyleClass = undefined) => {
 
   const [messages, updateMessages] = useReducer(arrayReducer, []);
@@ -52,7 +55,7 @@ const Chat = (messagesSource,
   return (
     <div ref={chatContainer} className={"chatContainer scrollable scrollbar-info p-2"}>
       {MessageList(messages, emptyListMessage, chatUserStyleClass, otherUserStyleClass)}
-      {ChatInput(updateMessages, chatUser, scrollPoint, sendButtonStyleClass)}
+      {ChatInput(updateMessages, chatUser, scrollPoint, inputMessageLabel, inputPlaceholder, sendButtonText, sendButtonStyleClass)}
     </div>
   );
 }
