@@ -4,6 +4,7 @@ import ListAction from "./ListAction";
 
 const ChatInput = (updateMessages,
                    chatUser = new ChatUser("Me", null, true),
+                   scrollPoint,
                    inputMessageLabel = "",
                    inputPlaceholder = "Write your message...",
                    sendButtonText = "Send",
@@ -36,7 +37,7 @@ const ChatInput = (updateMessages,
   }
 
   return (
-    <div className={"inputBarAndSendButtonContainer"}>
+    <div ref={scrollPoint}  className={"inputBarAndSendButtonContainer"}>
       {inputMessageLabel}
       <input type="text" name="name"
              value={inputMessage}
