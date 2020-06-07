@@ -3,6 +3,7 @@ import './App.css';
 import Chat from "./react-chat/Chat";
 import ChatUser from "./react-chat/ChatUser";
 import * as Rx from "rxjs"
+import ListAction from "./react-chat/ListAction";
 
 function App() {
   const chatUser = new ChatUser("Andrei", null, true);
@@ -16,7 +17,16 @@ function App() {
   const sendDummyMessage = () => {
     const otherUser = new ChatUser("Mihai");
     const chatMessage = {message: dummyMessage, user: otherUser};
-    dummyObserver.next(chatMessage);
+
+    if (dummyMessage.startsWith("-")) {
+      // simulate data loading from server
+      const dummyChatMessageList = [chatMessage, chatMessage, chatMessage];
+      dummyObserver.next({listAction: ListAction.PREPEND, data: dummyChatMessageList});
+    }
+    else {
+      // simulate received a message
+      dummyObserver.next({listAction: ListAction.APPEND, data: chatMessage});
+    }
   }
 
   const handleDummyKeyDown = (e) => {
@@ -30,13 +40,13 @@ function App() {
     <div className="App">
       <header className="App-header">
         {/*<Chat inputMessageLabel={"Mesaj:"} inputPlaceholder={"Scrie ceva..."} sendButtonText={"Trimite"} messagesSource={dummyMessagesSource} otherUserStyleClass={"bg-danger chatMessage-Left"} />*/}
-        { Chat(dummyMessagesSource, chatUser) }
+        {Chat(dummyMessagesSource, chatUser)}
 
-        <div style={{position: "absolute", bottom: "20px", fontSize: "15px"}}>
+        <div style={{position: "absolute", bottom: "20px", left: "20px", fontSize: "15px"}}>
           <input type={"text"} placeholder={"Write here a message to send to the chat"} style={{width: "300px"}}
                  value={dummyMessage}
                  onKeyDown={handleDummyKeyDown}
-                 onChange={e => setDummyMessage(e.target.value)} />
+                 onChange={e => setDummyMessage(e.target.value)}/>
         </div>
       </header>
     </div>

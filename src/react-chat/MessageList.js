@@ -19,7 +19,7 @@ const MessageList = (messages,
                      chatUserStyleClass = "bg-info chatMessage-Right",
                      otherUserStyleClass = "bg-success chatMessage-Left") => {
   return (
-    <ListGroup>
+    <ListGroup className={"messageList"}>
       {
         messages.length > 0 ?
           messages.map((chatMessage, index) =>

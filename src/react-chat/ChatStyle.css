@@ -1,21 +1,61 @@
-.userName {
-    opacity: 50%;
+/* Chat Container */
+.chatContainer {
+    bottom: 2%;
+    max-height: 94%;
+    position: absolute;
+    overflow-y: auto;
 }
 
+@media screen and (orientation: landscape) and (max-aspect-ratio: 10/1) {
+    .chatContainer {
+        width: 40%;
+        max-width: 40%;
+    }
+}
+@media screen and (orientation: landscape) and (max-aspect-ratio: 3/2) {
+    .chatContainer {
+        width: 75%;
+        max-width: 75%;
+    }
+}
+@media screen and (orientation: portrait) {
+    .chatContainer {
+        width: 100%;
+    }
+}
+
+
+/* Message List */
+.messageList {
+
+}
+
+/* Chat Message */
 .chatMessage-Left {
     text-align: left;
     margin-right: auto;
+    max-width: 90%;
 }
 
 .chatMessage-Right {
     text-align: right;
     margin-left: auto;
+    max-width: 90%;
 }
 
-.wideChat {
-    width: 1000px;
+
+/* Chat Message */
+.userName {
+    opacity: 50%;
 }
 
-.fullWidth {
+
+/* Chat Input */
+.inputBarAndSendButtonContainer {
+    margin-top: 10px;
+    display: flex;
+}
+
+.inputBar {
     width: 100%;
 }

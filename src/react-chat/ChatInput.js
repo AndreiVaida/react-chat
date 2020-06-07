@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import ChatUser from "./ChatUser";
+import ListAction from "./ListAction";
 
 const ChatInput = (updateMessages,
                    chatUser = new ChatUser("Me", null, true),
                    inputMessageLabel = "",
                    inputPlaceholder = "Write your message...",
-                   sendButtonText = "Send") => {
+                   sendButtonText = "Send",
+                   sendButtonStyleClass = "btn-primary") => {
 
   const [inputMessage, setInputMessage] = useState("");
 
@@ -30,22 +32,20 @@ const ChatInput = (updateMessages,
   }
 
   const addMessage = (chatMessage) => {
-    updateMessages({action: "append", data: chatMessage});
+    updateMessages({listAction: ListAction.APPEND, data: chatMessage});
   }
 
-  return(
+  return (
     <div className={"inputBarAndSendButtonContainer"}>
-      <label className={"inputBarContainer"}>
-        {inputMessageLabel}
-        <input type="text" name="name"
-               value={inputMessage}
-               placeholder={inputPlaceholder}
-               onChange={e => setInputMessage(e.target.value)}
-               onKeyDown={handleKeyDown}
-               className={"inputBar"}
-        />
-      </label>
-      <input type="submit" value={sendButtonText} onClick={onSend} className={"sendButton"}/>
+      {inputMessageLabel}
+      <input type="text" name="name"
+             value={inputMessage}
+             placeholder={inputPlaceholder}
+             onChange={e => setInputMessage(e.target.value)}
+             onKeyDown={handleKeyDown}
+             className={"inputBar"}
+      />
+      <input type="submit" value={sendButtonText} onClick={onSend} className={`sendButton ${sendButtonStyleClass}`}/>
     </div>
   );
 }
