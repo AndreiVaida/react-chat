@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Chat from "./react-chat/Chat";
 import ChatUser from "./react-chat/ChatUser";
@@ -6,25 +6,38 @@ import * as Rx from "rxjs"
 
 function App() {
   const chatUser = new ChatUser("Andrei", null, true);
-  const messagesSource = Rx.Observable.create(function (observer) {
-    generateMessages(observer);
+  let dummyObserver;
+  const dummyMessagesSource = Rx.Observable.create(observer => {
+    dummyObserver = observer;
   });
 
-  let count = 0;
-  const otherUser = new ChatUser("Mihai");
-  function generateMessages(observer) {
-    const chatMessage = {message: `Some message ${count++}`, user: otherUser};
-    setTimeout(() => {
-      observer.next(chatMessage);
-      generateMessages(observer);
-    }, 5000);
+  const [dummyMessage, setDummyMessage] = useState("");
+
+  const sendDummyMessage = () => {
+    const otherUser = new ChatUser("Mihai");
+    const chatMessage = {message: dummyMessage, user: otherUser};
+    dummyObserver.next(chatMessage);
+  }
+
+  const handleDummyKeyDown = (e) => {
+    if (e.key === 'Enter' && dummyMessage.trim().length > 0) {
+      sendDummyMessage();
+      setDummyMessage("");
+    }
   }
 
   return (
     <div className="App">
       <header className="App-header">
-        {/*<Chat inputMessageLabel={"Mesaj:"} inputPlaceholder={"Scrie ceva..."} sendButtonText={"Trimite"} messagesSource={messagesSource} otherUserStyleClass={"bg-danger chatMessage-Left"} />*/}
-        <Chat chatUser={chatUser} messagesSource={messagesSource} />
+        {/*<Chat inputMessageLabel={"Mesaj:"} inputPlaceholder={"Scrie ceva..."} sendButtonText={"Trimite"} messagesSource={dummyMessagesSource} otherUserStyleClass={"bg-danger chatMessage-Left"} />*/}
+        { Chat(dummyMessagesSource, chatUser) }
+
+        <div style={{position: "absolute", bottom: "20px", fontSize: "15px"}}>
+          <input type={"text"} placeholder={"Write here a message to send to the chat"} style={{width: "300px"}}
+                 value={dummyMessage}
+                 onKeyDown={handleDummyKeyDown}
+                 onChange={e => setDummyMessage(e.target.value)} />
+        </div>
       </header>
     </div>
   );

@@ -1,74 +1,40 @@
-import React from "react";
+import React, { useReducer } from "react";
 import MessageList from "./MessageList";
-import ChatUser from "./ChatUser";
 import "./ChatStyle.css"
+import ChatInput from "./ChatInput";
 
-class Chat extends React.Component {
-  constructor(props) {
-    super(props);
+const Chat = (messagesSource,
+              chatUser,
+              emptyListMessage = undefined,
+              chatUserStyleClass = undefined,
+              otherUserStyleClass = undefined) => {
+  const [messages, updateMessages] = useReducer(arrayReducer, []);
 
-    this.state = {
-      messages: [],
-      inputMessage: "",
-    };
+  messagesSource.subscribe({
+    next: chatMessage => updateMessages({action: "append", data: chatMessage}),
+    error: err => alert(`Something wrong occurred: ${err}`),
+    complete: () => alert('Chat is done'),
+  });
 
-    props.messagesSource.subscribe({
-      next: chatMessage => this.addMessage(chatMessage),
-      error: err => alert(`Something wrong occurred: ${err}`),
-      complete: () => alert('Chat is done'),
-    });
-  }
-
-  onSend = () => {
-    if (this.state.inputMessage.trim().length === 0) {
-      return;
-    }
-
-    const chatMessage = {
-      message: this.state.inputMessage,
-      user: this.props.chatUser ?? new ChatUser("Me", null, true),
-      dateTime: Date.now(),
-    };
-    this.addMessage(chatMessage);
-    this.setState({inputMessage: ""});
-  }
-
-  addMessage = (chatMessage) => {
-    this.setState({messages: [...this.state.messages, chatMessage]});
-  }
-
-  handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      this.onSend();
-    }
-  }
-
-  render() {
-    return (
-      <div className={"chatContainer"}>
-        {/* Message List */}
-        {MessageList(this.state.messages, this.props.emptyListMessage, this.props.chatUserStyleClass, this.props.otherUserStyleClass)}
-
-        {/* Input and Send a Message */}
-        <div className={"inputBarAndSendButtonContainer"}>
-          <label className={"inputBarContainer"}>
-            {this.props.inputMessageLabel}
-            <input type="text" name="name"
-                   value={this.state.inputMessage}
-                   placeholder={this.props.inputPlaceholder}
-                   onChange={e => this.setState({inputMessage: e.target.value})}
-                   onKeyDown={this.handleKeyDown}
-                   className={"inputBar"}
-            />
-          </label>
-          <input type="submit" value={this.props.sendButtonText} onClick={this.onSend} className={"sendButton"}/>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div className={"chatContainer"}>
+      { MessageList(messages, emptyListMessage, chatUserStyleClass, otherUserStyleClass) }
+      { ChatInput(updateMessages, chatUser)}
+    </div>
+  );
 }
 
-
-
+const arrayReducer = (array, {action, data}) => {
+  console.log(`chatMessage: ${JSON.stringify(data)}`);
+  switch (action) {
+    case "append":
+      return [...array, data];
+    case "prepend":
+      return [data, ...array];
+    default:
+      console.error("Invalid action in arrayReducer");
+      return array;
+  }
+}
 
 export default Chat;
