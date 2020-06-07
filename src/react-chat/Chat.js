@@ -1,4 +1,4 @@
-import React, { useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import MessageList from "./MessageList";
 import "./ChatStyle.css"
 import "./ScrollbarStyle.css"
@@ -8,13 +8,15 @@ import * as Rx from "rxjs";
 
 const Chat = (messagesSource,
               chatUser,
+              scrollObserver,
               emptyListMessage = undefined,
               chatUserStyleClass = undefined,
               otherUserStyleClass = undefined,
               sendButtonStyleClass = undefined) => {
 
   const [messages, updateMessages] = useReducer(arrayReducer, []);
-  const scrollPoint = useRef(null)
+  const scrollPoint = useRef(null);
+  const chatContainer = useRef(null);
 
   messagesSource.subscribe({
     next: ({listAction, data}) => updateMessages({listAction: listAction, data: data}),
@@ -32,14 +34,25 @@ const Chat = (messagesSource,
 
   const scrollToBottom = () => {
     setTimeout(() => {
-      scrollPoint.current.scrollIntoView({ behavior: "smooth" })
+      scrollPoint.current.scrollIntoView({behavior: "smooth"})
     }, 10);
   }
 
+  const onScroll = () => {
+    if (chatContainer.current.scrollTop <= 100) {
+      scrollObserver.next(chatContainer.current.scrollTop);
+    }
+  };
+
+  useEffect(() => {
+    if (scrollObserver)
+      chatContainer.current.addEventListener('scroll', onScroll);
+  });
+
   return (
-    <div className={"chatContainer scrollable scrollbar-info p-2"}>
-      { MessageList(messages, emptyListMessage, chatUserStyleClass, otherUserStyleClass) }
-      { ChatInput(updateMessages, chatUser, scrollPoint, sendButtonStyleClass)}
+    <div ref={chatContainer} className={"chatContainer scrollable scrollbar-info p-2"}>
+      {MessageList(messages, emptyListMessage, chatUserStyleClass, otherUserStyleClass)}
+      {ChatInput(updateMessages, chatUser, scrollPoint, sendButtonStyleClass)}
     </div>
   );
 }
