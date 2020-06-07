@@ -37,7 +37,7 @@ const ChatInput = (updateMessages,
   }
 
   return (
-    <div ref={scrollPoint}  className={"inputBarAndSendButtonContainer"}>
+    <div ref={scrollPoint} className={"inputBarAndSendButtonContainer"}>
       {inputMessageLabel}
       <input type="text" name="name"
              value={inputMessage}

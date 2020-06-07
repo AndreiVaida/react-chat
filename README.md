@@ -1,68 +1,83 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React Customizable Chat
+This is a very customizable _text message chat_ component. 
+Just provide the current user & a source for incoming messages and you are good to go! 
 
-## Available Scripts
+The **`Chat`** has 2 components: the **`MessageList`** and the **`ChatInput`**, which can be used and customized separately.
 
-In the project directory, you can run:
+- The current user's messages are placed by default on the right side and the others in the left.
+- The message list, the input and the layout can be customizable as you wish through parameters and through CSS classes.
+- The chat automatically scrolls to bottom when a message is added into the list.
+- A message can be sent by booth pressing the **Send** button and by typing the **Enter** key.
+- The chat notifies you through an observer when a message has been sent.
+- The chat notifies you through an observer when the user scrolls up at the top of the chat. You can use this feature to load older messages from server.
+- Messages can be added both in the beginning and at the end of the list.
 
-### `npm start`
+## Components description:
+`ChatUser`
+-
+Has a `name` _(string)_ and profile `image` _(image)_. 
+The property `isTheChatUser` _(boolean)_ is used to position the user's messages in the left/right of the chat.
+_You should have only 1 chat user._
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`ChatMessage`
+-
+Has a `message` _(string)_, the `user` _(ChatUser)_ who wrote it, and a `dateTime`.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+`MessageList`
+-
+Contains a list of **`messages`** _(ChatMessage[])_, an `emptyListMessage` _(string)_ which appears only when the list is empty, and the style classes for the two users: `chatUserStyleClass` and `otherUserStyleClass` _(string)_.
 
-### `npm test`
+Only `messages` is a mandatory parameter, the others having default values.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+_CSS class: `messageList`_
 
-### `npm run build`
+`ChatInput`
+-
+Mandatory parameters:
+- `updateMessages`: Hooks Reducer for updating the message list. The reducer shall accept the following parameter: `{listAction: ListAction, data: ChatMessage}`. The `data` can also be a `ChatMessage[]`. 
+- `chatUser`: the chat user. If not provided, it has a default value.
+- `scrollPoint` (internal setting): used for referring the element to scroll when a chat message is added.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Optional parameters:
+- `inputMessageLabel`: text to display on the left of the input
+- `inputPlaceholder`, `sendButtonText`, `sendButtonStyleClass`
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+_CSS classes: `inputBarAndSendButtonContainer`, `inputBar`, `sendButton`_
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`Chat`
+-
+Has all the parameters of `MessageList` and `ChatInput` and:
+- `messagesSource`: RxJs Observable which provides objects like `{listAction: ListAction, data: ChatMessage}`. The `data` can also be a `ChatMessage[]`.
+- `scrollObserver`: RxJs Observer which triggers when the chat is scrolled (almost) on the top _(distance <= 100 pixels)_. It sends the distance to the top.
 
-### `npm run eject`
+Only `messagesSource`, `chatUser` and `scrollObserver` parameters are mandatory. 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+_CSS class: `chatContainer`_
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+`ListAction` is used to **append** or **prepend** a message or messages in the chat list.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+---
 
-## Learn More
+## Usage:
+Default all parameters: 
+```
+{Chat(messagesSource, chatUser, scrollObserver)}
+```
+Example of custom parameters:
+```
+{Chat (messagesSource,
+       chatUser,
+       scrollObserver,
+       "Nothing here :(",
+       "This is your chat",
+       "Write something nice :)",
+       "bg-danger chatMessage-Left",
+       "bg-warning chatMessage-Right",
+       "Send me!",
+       "btn-info")
+     }
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+For more details, take a look at the source code (it has some docs and comments).
